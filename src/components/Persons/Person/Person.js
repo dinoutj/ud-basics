@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import classes from './Person.css';
+import Aux from '../../../hoc/Aux';
+import withClass from '../../../hoc/withClass';
 
 class Person extends Component {
   constructor(props) {
@@ -9,6 +13,9 @@ class Person extends Component {
 
   componentDidMount() {
     console.log('[Person.js] inside componentDidMount');
+    if (this.props.position === 0) {
+      this.inputElement.focus();
+    }
   }
 
   componentWillMount() {
@@ -18,11 +25,15 @@ class Person extends Component {
   render() {
     console.log('[Person.js] inside Render');
     return (
-      <div className={classes.Person}>
+      <Aux classes={classes.Person}>
         <p onClick={this.props.click}>I'm a {this.props.name} and I am {this.props.age} years old</p>
         <p>{this.props.children}</p>
-        <input type="text" onChange={this.props.changed} value={this.props.name} />
-      </div>
+        <input
+          ref={(inp) => { this.inputElement = inp }}
+          type="text"
+          onChange={this.props.changed}
+          value={this.props.name} />
+      </Aux>
     );
     // return [
     //   <p key="1" onClick={this.props.click}>I'm a {this.props.name} and I am {this.props.age} years old</p>,
@@ -31,4 +42,12 @@ class Person extends Component {
     // ];
   }
 }
-export default Person;
+
+Person.propTypes = {
+  click: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  age: PropTypes.number.isRequired,
+  changed: PropTypes.func.isRequired
+}
+
+export default withClass(Person, classes.Person);
